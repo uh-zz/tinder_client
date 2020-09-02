@@ -31,5 +31,5 @@ tinder_client.py:10行目
 
 ## Author
 
-[NakZMichael](https://github.com/NakZMichael)  
+[NakZMichael](https://github.com/NakZMichael)   
 [uh-zz](https://github.com/uh-zz)
