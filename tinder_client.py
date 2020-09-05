@@ -1,11 +1,13 @@
 from selenium import webdriver
 import chromedriver_binary
 import requests
+import json
+import time
 
 options = webdriver.ChromeOptions()
 
 options.add_argument(
-    '--user-data-dir=/Users/uh-zz/Library/Application Support/Google/Chrome/'
+    '--user-data-dir='
 )
 options.add_argument(
     '--headless'
@@ -13,27 +15,43 @@ options.add_argument(
 
 options.add_argument("--remote-debugging-port=9222") 
 options.add_argument('--no-sandbox')
+options.add_argument('--disable-dev-shm-usage')
 
 driver = webdriver.Chrome(options=options)
 
 driver.get("https://tinder.com/app/recs")
 
-session = requests.session()
+api_key = driver.execute_script("return localStorage.getItem('TinderWeb/APIToken')")
+print("api_key:", api_key)
 
-for cookie in driver.get_cookies():
-    session.cookies.set(cookie['name'], cookie['value'])
-    print(cookie['name'], cookie['value'])
+with requests.Session() as session:
+    headers = {
+        "X-Auth-Token": api_key,
+        "Content-Type": "application/json"
+    }
 
-result = session.get("https://api.gotinder.com/v2/recs/core?locale=ja")
+    session.headers.update(headers)
 
-print(result.text)
+    # 女の子リスト取得
+    users = session.get("https://api.gotinder.com/v2/recs/core?locale=ja")
 
-# ユーザ取得
-# users = driver.get("https://api.gotinder.com/v2/recs/core?locale=ja")
-# print(users)
+    count = 0 
+    for user in json.loads(users.text)["data"]["results"]:
+        count += 1
 
-# postする場所
-# "https://api.gotinder.com/like/{_id}?locale=ja"
+        # 1秒待たせて手動っぽくする
+        time.sleep(1)
+        print("count:", count)
+
+        user_id = user["user"]["_id"]
+        print(user_id)
+
+        # いいね!
+        session.get("https://api.gotinder.com/like/{}?locale=ja".format(user_id))
+
+        # 一回でいいねする上限
+        if count == 20:
+            break
 
 driver.quit()
 
