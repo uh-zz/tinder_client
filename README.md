@@ -14,7 +14,8 @@ tinder_client
   
 ```
 pip install selenium  
-pip install chromedriver-binary==Chromeバージョン番号  
+pip install chromedriver-binary==Chromeバージョン番号 
+pip install schedule
 ```
 Chromeバージョンは、ブラウザのURLに`chrome://version/`を入力して「Google Chrome」のバージョン番号を入力する。  
   
