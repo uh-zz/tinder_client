@@ -7,6 +7,7 @@ import time
 import schedule
 # %%
 def main():
+    # %%
     json_open = open('profile.json', 'r')
     json_load = json.load(json_open)
     userdata = json_load["userdata"]
@@ -32,14 +33,23 @@ def main():
     # %%
     driver.get("https://tinder.com/app/recs")
 
-    # %%
+    # %% 電話番号を入力
     BASE_URL = "https://api.gotinder.com/"
-    phone_number =  json_load["phonenumber"] #input("Enter your phone number: ")
+    phone_number =  json_load["phonenumber"] #input("電話番号を入力: ")
     session = requests.session()
     # Request OTP verification code
     url = BASE_URL + "v2/auth/sms/send?auth_type=sms"
     body = {"phone_number": phone_number}
     session.post(url, body )
+
+    # %% 認証コードを入力
+    url = BASE_URL + "v2/auth/login/sms"
+    body = {
+        "otp_code": input("認証コードを入力: "),
+        "phone_number": phone_number,
+        "is_update": False,
+    }
+    session.post(url, json=body)
 
     # %%
     api_key = driver.execute_script("return localStorage.getItem('TinderWeb/APIToken')")
