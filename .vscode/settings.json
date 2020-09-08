@@ -1,4 +1,4 @@
 {
-    "python.pythonPath": "/Users/nakazato/.pyenv/versions/3.7.8/bin/python",
+    "python.pythonPath": "/usr/bin/python3",
     "python.dataScience.jupyterServerURI": "local"
 }
